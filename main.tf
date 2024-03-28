@@ -34,6 +34,7 @@ module "blog_vpc" {
   }
 }
 
+
 module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.0"
@@ -95,14 +96,15 @@ module "blog_alb" {
     }
   }
 
-  target_groups = [
-    {
+  target_groups = {
+    ex-instance = {
       name_prefix      = "blog-"
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
+      target_id = aws_instance.blog.id
     }
-  ]
+  }
 
   tags = {
     Environment = "dev"
